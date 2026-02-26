@@ -1,44 +1,37 @@
 /**
  * MAIN CLASS: PalindromeCheckerApp
- * Use Case 4: Character Array Based Palindrome Check
+ * Use Case 5: Stack-Based Palindrome Checker
  *
  * Description:
- * Convert string to character array and compare characters
- * using the Two-Pointer Technique.
+ * Use stack to reverse characters and validate palindrome.
  *
  * Key Concepts Used:
- *  - Character Array (char[])
- *  - Array Indexing
- *  - Two-Pointer Technique
- *  - Time Complexity Awareness
+ *  - Stack
+ *  - Push Operation
+ *  - Pop Operation
+ *  - Reversal Logic
  *
  * @author Ryan John Mathew
- * @version 4.0
+ * @version 5.0
  */
-
+import java.util.Stack;
 public class PalindromeCheckerApp {
 
     public static void main(String[] args){
 
-        String word = "radar";
-        char[] chars = word.toCharArray();
-
-        int start = 0;
-        int end = chars.length - 1;
+        String word = "noon";
+        Stack<Character> stack = new Stack<>();
+        for (char c : word.toCharArray()){
+            stack.push(c);
+        }
 
         boolean isPalindrome = true;
-
-        while (start < end) {
-
-            if (chars[start] != chars[end]) {
+        for (char c : word.toCharArray()){
+            if (c != stack.pop()){
                 isPalindrome = false;
                 break;
             }
-
-            start++;
-            end--;
         }
-
         if (isPalindrome) {
             System.out.println(word + " is a palindrome");
         } else {
