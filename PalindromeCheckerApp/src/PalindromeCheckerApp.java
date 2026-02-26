@@ -1,35 +1,47 @@
 /**
  * MAIN CLASS: PalindromeCheckerApp
- * Use Case 3: Palindrome Check Using String Reverse
+ * Use Case 5: Stack-Based Palindrome Checker
  *
  * Description:
- * This class demonstrates palindrome validation
- * by reversing the string and comparing it
- * with the original value.
+ * Use stack to reverse characters and validate palindrome.
  *
  * Key Concepts Used:
- *  - Loop (for loop)
- *  - String Immutability
- *  - String Concatenation (+)
- *  - equals() Method
+ *  - Stack
+ *  - Push Operation
+ *  - Pop Operation
+ *  - Reversal Logic
  *
  * @author Ryan John Mathew
- * @version 3.0
+ * @version 5.0
  */
-
+import java.util.Stack;
 public class PalindromeCheckerApp {
 
     public static void main(String[] args){
 
-        String word = "madam";
-        String reversed = "";
+        String word = "noon";
 
-        for (int i = word.length() - 1; i >= 0; i--) {
+        // Create Stack
+        Stack<Character> stack = new Stack<>();
 
-            reversed = reversed + word.charAt(i);
+        // Push Operation
+        // Push all characters of the string into the stack
+        for (char c : word.toCharArray()){
+            stack.push(c);
         }
 
-        if (word.equals(reversed)) {
+        boolean isPalindrome = true;
+
+        // Pop Operation & Reversal Logic
+        // Compare original characters with popped characters
+        for (char c : word.toCharArray()){
+            if (c != stack.pop()){
+                isPalindrome = false;
+                break;
+            }
+        }
+
+        if (isPalindrome) {
             System.out.println(word + " is a palindrome");
         } else {
             System.out.println(word + " is not a palindrome");
