@@ -20,27 +20,18 @@ public class PalindromeCheckerApp {
     public static void main(String[] args){
 
         String word = "noon";
-
-        // Create Stack
         Stack<Character> stack = new Stack<>();
-
-        // Push Operation
-        // Push all characters of the string into the stack
         for (char c : word.toCharArray()){
             stack.push(c);
         }
 
         boolean isPalindrome = true;
-
-        // Pop Operation & Reversal Logic
-        // Compare original characters with popped characters
         for (char c : word.toCharArray()){
             if (c != stack.pop()){
                 isPalindrome = false;
                 break;
             }
         }
-
         if (isPalindrome) {
             System.out.println(word + " is a palindrome");
         } else {
