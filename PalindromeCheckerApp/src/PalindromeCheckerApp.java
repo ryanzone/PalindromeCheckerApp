@@ -1,17 +1,18 @@
 /**
  * MAIN CLASS: PalindromeCheckerApp
- * Use Case 7: Deque-Based Optimized Palindrome Checker
+ * Use Case 8: Linked List Based Palindrome Checker
  *
  * Description:
- * Use Deque to compare front and rear elements.
+ * Check palindrome using singly linked list.
  *
  * Key Concepts Used:
- * Deque (Double Ended Queue) – A data structure that allows insertion and deletion from both front and rear ends.
- * Front and Rear Access – Enables direct comparison of first and last characters.
- * Optimized Data Handling – Eliminates the need for separate reversal data structures.
+ * Singly Linked List – A dynamic data structure where elements are connected using node references.
+ * Node Traversal – Sequential access to elements using next references.
+ * Fast and Slow Pointer Technique – Used to find the middle of the linked list efficiently.
+ * In-Place Reversal – Reverses the second half of the list without extra memory.
  *
  * @author Ryan John Mathew
- * @version 7.0
+ * @version 8.0
  */
 
 import java.util.Deque;
@@ -19,37 +20,102 @@ import java.util.ArrayDeque;
 
 public class PalindromeCheckerApp {
 
-    public static void main(String[] args){
+    // Definition of singly linked list node
+    static class Node {
+        char data;
+        Node next;
 
-        // String to be checked
-        String word = "racecar";
-
-        // Create a Deque
-        Deque<Character> deque = new ArrayDeque<>();
-
-        // Insert characters into deque
-        for (int i = 0; i < word.length(); i++) {
-            deque.addLast(word.charAt(i));
+        Node(char data) {
+            this.data = data;
+            this.next = null;
         }
 
-        boolean isPalindrome = true;
+        public static void main(String[] args){
 
-        // Compare front and rear characters
-        while (deque.size() > 1) {
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
+            // Input string
+            String word = "madam";
 
-            if (front != rear) {
-                isPalindrome = false;
-                break;
+            // Convert string to linked list
+            Node head = createLinkedList(word);
+
+            // Check if palindrome
+            boolean isPalindrome = isPalindrome(head);
+
+            // Print result
+            if (isPalindrome) {
+                System.out.println(word + " is a Palindrome");
+            } else {
+                System.out.println(word + " is NOT a Palindrome");
             }
         }
 
-        // Print result
-        if (isPalindrome) {
-            System.out.println(word + " is a Palindrome");
-        } else {
-            System.out.println(word + " is NOT a Palindrome");
+        // Create linked list from string
+        private static Node createLinkedList(String word) {
+            Node head = null;
+            Node tail = null;
+
+            for (int i = 0; i < word.length(); i++) {
+                Node newNode = new Node(word.charAt(i));
+
+                if (head == null) {
+                    head = newNode;
+                    tail = newNode;
+                } else {
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+            }
+            return head;
+        }
+
+        // Palindrome check using linked list
+        private static boolean isPalindrome(Node head) {
+            if (head == null || head.next == null) {
+                return true;
+            }
+
+            // Find middle using fast & slow pointers
+            Node slow = head;
+            Node fast = head;
+
+            while (fast.next != null && fast.next.next != null) {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+
+            // Reverse second half
+            Node secondHalf = reverseList(slow.next);
+
+            // Compare both halves
+            Node firstHalf = head;
+            Node tempSecond = secondHalf;
+
+            boolean result = true;
+
+            while (tempSecond != null) {
+                if (firstHalf.data != tempSecond.data) {
+                    result = false;
+                    break;
+                }
+                firstHalf = firstHalf.next;
+                tempSecond = tempSecond.next;
+            }
+
+            return result;
+        }
+
+        // Reverse linked list
+        private static Node reverseList(Node head) {
+            Node prev = null;
+            Node current = head;
+
+            while (current != null) {
+                Node nextNode = current.next;
+                current.next = prev;
+                prev = current;
+                current = nextNode;
+            }
+            return prev;
         }
     }
 }
