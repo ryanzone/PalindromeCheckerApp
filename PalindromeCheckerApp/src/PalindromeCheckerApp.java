@@ -1,121 +1,58 @@
 /**
  * MAIN CLASS: PalindromeCheckerApp
- * Use Case 8: Linked List Based Palindrome Checker
+ * Use Case 9: Recursive Palindrome Checker
  *
  * Description:
- * Check palindrome using singly linked list.
+ * Check palindrome using recursion.
  *
  * Key Concepts Used:
- * Singly Linked List – A dynamic data structure where elements are connected using node references.
- * Node Traversal – Sequential access to elements using next references.
- * Fast and Slow Pointer Technique – Used to find the middle of the linked list efficiently.
- * In-Place Reversal – Reverses the second half of the list without extra memory.
+ * Recursion – A technique where a method calls itself to solve smaller subproblems.
+ * Base Condition – Stops recursion to prevent infinite calls.
+ * String Indexing – Comparing characters using start and end indices.
+ * Call Stack – Stores recursive method calls in memory until execution completes.
  *
  * @author Ryan John Mathew
- * @version 8.0
+ * @version 9.0
  */
-
-import java.util.Deque;
-import java.util.ArrayDeque;
+import java.util.Scanner;
 
 public class PalindromeCheckerApp {
 
-    // Definition of singly linked list node
-    static class Node {
-        char data;
-        Node next;
+    // Recursive method
+    public static boolean isPalindrome(String str, int start, int end) {
 
-        Node(char data) {
-            this.data = data;
-            this.next = null;
+        // Base Condition: If pointers cross or meet
+        if (start >= end) {
+            return true;
         }
 
-        public static void main(String[] args){
-
-            // Input string
-            String word = "madam";
-
-            // Convert string to linked list
-            Node head = createLinkedList(word);
-
-            // Check if palindrome
-            boolean isPalindrome = isPalindrome(head);
-
-            // Print result
-            if (isPalindrome) {
-                System.out.println(word + " is a Palindrome");
-            } else {
-                System.out.println(word + " is NOT a Palindrome");
-            }
+        // If characters don't match
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
         }
 
-        // Create linked list from string
-        private static Node createLinkedList(String word) {
-            Node head = null;
-            Node tail = null;
+        // Recursive call
+        return isPalindrome(str, start + 1, end - 1);
+    }
 
-            for (int i = 0; i < word.length(); i++) {
-                Node newNode = new Node(word.charAt(i));
+    public static void main(String[] args) {
 
-                if (head == null) {
-                    head = newNode;
-                    tail = newNode;
-                } else {
-                    tail.next = newNode;
-                    tail = newNode;
-                }
-            }
-            return head;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
+
+        // Optional: Normalize input (remove spaces & convert to lowercase)
+        input = input.replaceAll("\\s+", "").toLowerCase();
+
+        boolean result = isPalindrome(input, 0, input.length() - 1);
+
+        if (result) {
+            System.out.println("The string is a Palindrome.");
+        } else {
+            System.out.println("The string is NOT a Palindrome.");
         }
 
-        // Palindrome check using linked list
-        private static boolean isPalindrome(Node head) {
-            if (head == null || head.next == null) {
-                return true;
-            }
-
-            // Find middle using fast & slow pointers
-            Node slow = head;
-            Node fast = head;
-
-            while (fast.next != null && fast.next.next != null) {
-                slow = slow.next;
-                fast = fast.next.next;
-            }
-
-            // Reverse second half
-            Node secondHalf = reverseList(slow.next);
-
-            // Compare both halves
-            Node firstHalf = head;
-            Node tempSecond = secondHalf;
-
-            boolean result = true;
-
-            while (tempSecond != null) {
-                if (firstHalf.data != tempSecond.data) {
-                    result = false;
-                    break;
-                }
-                firstHalf = firstHalf.next;
-                tempSecond = tempSecond.next;
-            }
-
-            return result;
-        }
-
-        // Reverse linked list
-        private static Node reverseList(Node head) {
-            Node prev = null;
-            Node current = head;
-
-            while (current != null) {
-                Node nextNode = current.next;
-                current.next = prev;
-                prev = current;
-                current = nextNode;
-            }
-            return prev;
-        }
+        scanner.close();
     }
 }
