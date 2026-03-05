@@ -1,72 +1,103 @@
 /**
  * MAIN CLASS: PalindromeCheckerApp
- * Use Case 10: Case-Insensitive & Space-Ignored Palindrome
+ * Use Case 11: Object-Oriented Palindrome Service
  *
  * Description:
- * Validates whether a given string is a palindrome by ignoring
- * letter case differences and whitespace characters.
+ * This console-based application validates whether a given string
+ * is a palindrome by utilizing a dedicated PalindromeChecker class.
+ * The palindrome logic is encapsulated inside the service class,
+ * promoting clean architecture and maintainable code.
+ *
+ * The application also supports:
+ * - Case-insensitive comparison
+ * - Ignoring whitespace characters
  *
  * Flow:
- * 1. Normalize the string (convert to lowercase).
- * 2. Remove spaces using string preprocessing / regular expressions.
- * 3. Apply palindrome checking logic.
+ * 1. Accept user input from the console.
+ * 2. Normalize the string (convert to lowercase).
+ * 3. Remove whitespace using string preprocessing / regular expressions.
+ * 4. Pass the processed string to the PalindromeChecker service class.
+ * 5. The service internally performs palindrome validation using
+ *    a data structure (Stack / Array).
+ * 6. Display the result to the user.
  *
- * Key Concepts Used:
- * String Preprocessing – Modifying input string before validation.
+ * Key Concepts Used (OOPS):
+ * Encapsulation – Palindrome logic is contained within the PalindromeChecker class.
+ * Single Responsibility Principle – The PalindromeChecker class handles only palindrome validation.
+ * Method Abstraction – The checkPalindrome() method exposes a clean interface.
+ *
+ * Programming Concepts Used:
+ * String Preprocessing – Preparing input before validation.
  * Regular Expressions – Used to remove whitespace characters.
- * Case Normalization – Converting characters to uniform case for accurate comparison.
+ * Case Normalization – Converting characters to a uniform case.
  * String Traversal – Comparing characters sequentially.
  *
  * Data Structure Used:
- * String / Character Array
+ * Stack / Character Array (internal implementation inside PalindromeChecker class)
  *
  * @author Ryan John Mathew
- * @version 10.0
+ * @version 11.0
  */
-
 import java.util.Scanner;
+import java.util.Stack;
 
 public class PalindromeCheckerApp {
-
-    // Method to check palindrome (Iterative Two-Pointer Approach)
-    public static boolean isPalindrome(String str) {
-
-        int start = 0;
-        int end = str.length() - 1;
-
-        while (start < end) {
-            if (str.charAt(start) != str.charAt(end)) {
-                return false;
-            }
-            start++;
-            end--;
-        }
-
-        return true;
-    }
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter a string: ");
+        System.out.println("Enter a string to check if it is a palindrome:");
         String input = scanner.nextLine();
 
-        // Step 1: Convert to lowercase
-        input = input.toLowerCase();
+        // Normalize input
+        String processed = input.toLowerCase().replaceAll("\\s+", "");
 
-        // Step 2: Remove all whitespace using regular expression
-        input = input.replaceAll("\\s+", "");
+        // Create service object
+        PalindromeChecker checker = new PalindromeChecker();
 
-        // Step 3: Apply palindrome logic
-        boolean result = isPalindrome(input);
+        boolean result = checker.checkPalindrome(processed);
 
         if (result) {
-            System.out.println("The string is a Palindrome (Ignoring spaces & case).");
+            System.out.println("The string IS a palindrome.");
         } else {
-            System.out.println("The string is NOT a Palindrome.");
+            System.out.println("The string is NOT a palindrome.");
         }
 
         scanner.close();
+    }
+}
+
+/**
+ * SERVICE CLASS: PalindromeChecker
+ *
+ * Responsible only for palindrome validation.
+ * Demonstrates encapsulation and single responsibility principle.
+ */
+class PalindromeChecker {
+
+    /**
+     * Checks if a string is a palindrome using a Stack.
+     *
+     * @param text processed string (lowercase, no spaces)
+     * @return true if palindrome, false otherwise
+     */
+    public boolean checkPalindrome(String text) {
+
+        Stack<Character> stack = new Stack<>();
+
+        // Push characters into stack
+        for (int i = 0; i < text.length(); i++) {
+            stack.push(text.charAt(i));
+        }
+
+        // Compare characters
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) != stack.pop()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
