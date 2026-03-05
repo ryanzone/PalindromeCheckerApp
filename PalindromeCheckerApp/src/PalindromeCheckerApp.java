@@ -5,43 +5,44 @@ import java.util.ArrayDeque;
 
 /**
  * MAIN CLASS: PalindromeCheckerApp
- * Use Case 12: Strategy Pattern for Palindrome Algorithms
+ * Use Case 13: Performance Comparison of Palindrome Algorithms
  *
  * Description:
- * This console-based application validates whether a given string
- * is a palindrome using dynamically selectable algorithms.
+ * This console-based application evaluates whether a given string
+ * is a palindrome using multiple algorithms and compares their
+ * execution performance.
  *
- * The program follows the Strategy Design Pattern where different
- * palindrome checking algorithms are encapsulated into separate
- * strategy classes implementing a common interface.
+ * The program builds on the Strategy Pattern architecture where
+ * each palindrome algorithm is encapsulated in its own strategy class.
+ * The application runs all strategies sequentially and measures
+ * execution time using System.nanoTime().
  *
  * Flow:
  * 1. Accept user input from the console.
  * 2. Normalize the string (convert to lowercase).
  * 3. Remove whitespace using regular expressions.
- * 4. Ask the user to choose a palindrome algorithm.
- * 5. Inject the selected strategy into the PalindromeChecker service.
- * 6. Execute palindrome validation using the chosen strategy.
- * 7. Display the result to the user.
+ * 4. Execute multiple palindrome algorithms.
+ * 5. Capture execution time using System.nanoTime().
+ * 6. Display whether the string is a palindrome.
+ * 7. Show performance comparison results.
  *
  * Key Concepts Used (OOPS):
- * Interface – Defines the contract for palindrome strategies.
- * Polymorphism – Different strategies implement the same interface.
- * Strategy Pattern – Algorithm can be changed dynamically at runtime.
- * Encapsulation – Each algorithm is isolated within its own class.
+ * Interface – Defines the contract for palindrome algorithms.
+ * Polymorphism – Multiple strategies implement the same interface.
+ * Strategy Pattern – Algorithms are interchangeable.
  *
  * Programming Concepts Used:
- * String Preprocessing – Preparing input before validation.
- * Regular Expressions – Removing whitespace characters.
- * Case Normalization – Converting characters to uniform case.
- * Dynamic Behavior – Selecting algorithms at runtime.
+ * System.nanoTime() – High-precision execution time measurement.
+ * Algorithm Comparison – Evaluating performance across strategies.
+ * String Preprocessing – Normalizing input before validation.
  *
  * Data Structures Used:
  * Stack (StackStrategy)
  * Deque (DequeStrategy)
+ * Two-Pointer Traversal (TwoPointerStrategy)
  *
  * @author Ryan John Mathew
- * @version 12.0
+ * @version 13.0
  */
 
 public class PalindromeCheckerApp {
@@ -56,28 +57,36 @@ public class PalindromeCheckerApp {
         // Normalize input
         String processed = input.toLowerCase().replaceAll("\\s+", "");
 
-        System.out.println("\nChoose Algorithm:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
+        // Create strategy list
+        PalindromeStrategy[] strategies = {
+                new StackStrategy(),
+                new DequeStrategy(),
+                new TwoPointerStrategy()
+        };
 
-        int choice = scanner.nextInt();
+        String[] names = {
+                "Stack Strategy",
+                "Deque Strategy",
+                "Two Pointer Strategy"
+        };
 
-        PalindromeStrategy strategy;
+        System.out.println("\n--- Performance Comparison ---");
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        for (int i = 0; i < strategies.length; i++) {
 
-        PalindromeChecker checker = new PalindromeChecker(strategy);
+            PalindromeChecker checker = new PalindromeChecker(strategies[i]);
 
-        boolean result = checker.checkPalindrome(processed);
+            long startTime = System.nanoTime();
 
-        if (result) {
-            System.out.println("The string IS a palindrome.");
-        } else {
-            System.out.println("The string is NOT a palindrome.");
+            boolean result = checker.checkPalindrome(processed);
+
+            long endTime = System.nanoTime();
+
+            long executionTime = endTime - startTime;
+
+            System.out.println("\nAlgorithm: " + names[i]);
+            System.out.println("Palindrome: " + result);
+            System.out.println("Execution Time: " + executionTime + " ns");
         }
 
         scanner.close();
@@ -95,7 +104,7 @@ interface PalindromeStrategy {
 
 /**
  * Context Class
- * Uses a selected palindrome strategy.
+ * Executes a selected strategy.
  */
 class PalindromeChecker {
 
@@ -111,7 +120,7 @@ class PalindromeChecker {
 }
 
 /**
- * Stack-Based Palindrome Algorithm
+ * Stack-Based Algorithm
  */
 class StackStrategy implements PalindromeStrategy {
 
@@ -134,7 +143,7 @@ class StackStrategy implements PalindromeStrategy {
 }
 
 /**
- * Deque-Based Palindrome Algorithm
+ * Deque-Based Algorithm
  */
 class DequeStrategy implements PalindromeStrategy {
 
@@ -150,6 +159,30 @@ class DequeStrategy implements PalindromeStrategy {
             if (deque.removeFirst() != deque.removeLast()) {
                 return false;
             }
+        }
+
+        return true;
+    }
+}
+
+/**
+ * Two-Pointer Algorithm (Most Efficient)
+ */
+class TwoPointerStrategy implements PalindromeStrategy {
+
+    public boolean checkPalindrome(String text) {
+
+        int left = 0;
+        int right = text.length() - 1;
+
+        while (left < right) {
+
+            if (text.charAt(left) != text.charAt(right)) {
+                return false;
+            }
+
+            left++;
+            right--;
         }
 
         return true;
